@@ -31,6 +31,7 @@ function QA_PROMPT() {
     7. In every response, include a \`<script setup>\` tag with \`lang="ts"\` that contains the template's dependencies.
     8. Format icon names consistently as 'i-heroicons-[name]' (e.g., \`<UIcon name="i-heroicons-chat-bubble-oval-left-20-solid" />\`).
     9.Dont hallucinate or make up tailwind styles or classes. Only use the ones that are documented in the tailwind docs.
+    10. Insure using Nuxt ui elements before using vanilla html elements.
   
     
     Incorporate any relevant chat history or existing code below to facilitate the required updates or changes.

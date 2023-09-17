@@ -1,29 +1,94 @@
-<template>
-  <div class="flex items-center justify-center h-screen bg-gray-100">
-    <div class="flex flex-col items-center justify-center w-64 h-64 bg-white shadow-lg rounded-lg">
-      <UIcon name="i-heroicons-musical-note-solid" class="text-4xl text-gray-700" />
-      <div class="mt-4 text-center">
-        <p class="text-lg font-medium text-gray-700">Song Title</p>
-        <p class="text-sm text-gray-500">Song Artist</p>
-      </div>
-      <div class="mt-6 flex items-center justify-center space-x-4">
-        <UIcon name="i-heroicons-play-pause" class="text-2xl text-gray-700 cursor-pointer" />
-        <UIcon name="i-heroicons-musical-note-20-solid" class="text-2xl text-gray-700 cursor-pointer" />
-        <UIcon name="i-heroicons-play-pause-solid" class="text-2xl text-gray-700 cursor-pointer" />
-      </div>
-      <div class="mt-6">
-        <UIcon name="i-heroicons-speaker-wave" class="text-2xl text-gray-700" />
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue'
 
-const playing = ref(false);
+const options = ref([
+  { id: 1, name: 'bug', color: 'd73a4a' },
+  { id: 2, name: 'documentation', color: '0075ca' },
+  { id: 3, name: 'duplicate', color: 'cfd3d7' },
+  { id: 4, name: 'enhancement', color: 'a2eeef' },
+  { id: 5, name: 'good first issue', color: '7057ff' },
+  { id: 6, name: 'help wanted', color: '008672' },
+  { id: 7, name: 'invalid', color: 'e4e669' },
+  { id: 8, name: 'question', color: 'd876e3' },
+  { id: 9, name: 'wontfix', color: 'ffffff' },
+  { id: 10, name: 'new option', color: 'f54242' }
+])
 
-const togglePlay = () => {
-  playing.value = !playing.value;
-};
+const selected = ref([])
+
+const labels = computed({
+  get: () => selected.value,
+  set: async (labels) => {
+    const promises = labels.map(async (label) => {
+      if (label.id) {
+        return label
+      }
+
+      const response = {
+        name: label.name,
+        color: generateColorFromString(label.name)
+      }
+
+      options.value.push(response)
+
+      return response
+    })
+
+    selected.value = await Promise.all(promises)
+  }
+})
+
+function generateColorFromString (str) {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  const c = (hash & 0x00FFFFFF)
+    .toString(16)
+    .toUpperCase()
+
+  return '00000'.substring(0, 6 - c.length) + c
+}
 </script>
+
+<template>
+  <USelectMenu
+    v-model="labels"
+    by="id"
+    name="labels"
+    :options="options"
+    option-attribute="name"
+    multiple
+    searchable
+    creatable
+  >
+    <template #label>
+      <template v-if="labels.length">
+        <span class="flex items-center -space-x-1">
+          <span v-for="label of labels" :key="label.id" class="flex-shrink-0 w-2 h-2 mt-px rounded-full" :style="{ background: `#${label.color}` }" />
+        </span>
+        <span>{{ labels.length }} label{{ labels.length > 1 ? 's' : '' }}</span>
+      </template>
+      <template v-else>
+        <span class="text-gray-500 dark:text-gray-400 truncate">Select labels</span>
+      </template>
+    </template>
+
+    <template #option="{ option }">
+      <span
+        class="flex-shrink-0 w-2 h-2 mt-px rounded-full"
+        :style="{ background: `#${option.color}` }"
+      />
+      <span class="truncate">{{ option.name }}</span>
+    </template>
+
+    <template #option-create="{ option }">
+      <span class="flex-shrink-0">New label:</span>
+      <span
+        class="flex-shrink-0 w-2 h-2 mt-px rounded-full -mx-1"
+        :style="{ background: `#${generateColorFromString(option.name)}` }"
+      />
+      <span class="block truncate">{{ option.name }}</span>
+    </template>
+  </USelectMenu>
+</template>

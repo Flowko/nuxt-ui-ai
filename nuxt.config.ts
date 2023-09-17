@@ -14,4 +14,8 @@ export default defineNuxtConfig({
   ui: {
     icons: ['ph', 'heroicons', 'solar', 'simple-icons'],
   },
+  colorMode: {
+    preference: 'light',
+    fallback: 'light',
+  },
 })
