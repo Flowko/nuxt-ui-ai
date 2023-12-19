@@ -2,4 +2,4 @@
 - follow the langchain guide to setup the supabase database https://js.langchain.com/docs/integrations/vectorstores/supabase
 - install and run the project
 - go to `/api/ingest` to ingest the data into the database
-- go back to the home page and open a new page with `/test` to see the results
+- go back to the home page and you start typing

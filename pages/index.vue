@@ -131,8 +131,8 @@ function setQuestion(question: string) {
 </script>
 
 <template>
-  <main class="">
-    <div class="px-4 py-4 sm:px-6 lg:px-8 flex flex-col gap-y-4">
+  <main class="flex flex-col h-full ">
+    <div class="h-1/2 px-4 py-4 sm:px-6 lg:px-8 flex flex-col gap-y-4 overflow-scroll">
       <template v-if="view === 'question'">
         <p class="text-sm font-medium leading-6 text-gray-400">
           Examples
@@ -149,50 +149,45 @@ function setQuestion(question: string) {
           </li>
         </ul>
       </template>
-      <div v-else ref="messageListRef" class="rounded-md pl-2 py-4 pr-4 h-[720px] max-h-[720px] overflow-auto">
+      <div v-else ref="messageListRef" class="rounded-md pl-2 py-4 pr-4">
         <ChatConversation :messages="chatMessages" />
       </div>
 
       <div class="flex flex-col gap-y-3">
         <div class="flex items-start space-x-4">
           <div class="min-w-0 flex-1">
-            <div class="relative">
-              <div class="overflow-hidden rounded-lg  shadow-sm ">
-                <UTextarea
-                  id="comment"
-                  v-model="query"
-                  class="p-1"
-                  :disabled="loading"
-                  :rows="3"
-                  name="comment"
-                  placeholder="Ask Nuxt Labs AI a question..."
-                  autoresize
-                />
+            <div class="">
+              <UTextarea
+                id="comment"
+                v-model="query"
+                class="p-1"
+                :disabled="loading"
+                :rows="3"
+                name="comment"
+                placeholder="Ask Nuxt Labs AI a question..."
+                autoresize
+              />
 
-                <div class="py-2" aria-hidden="true">
-                  <div class="py-px">
-                    <div class="h-9" />
-                  </div>
-                </div>
-              </div>
-
-              <div class="absolute inset-x-0 bottom-0 flex justify-end py-2 pl-3 pr-2">
-                <div class="flex-shrink-0">
-                  <UButton
-                    trailing
-                    icon="i-solar-transfer-horizontal-linear"
-                    label="Send"
-                    color="gray" variant="solid"
-                    @click="search"
-                  />
-                </div>
-              </div>
+              <UButton
+                trailing
+                icon="i-solar-transfer-horizontal-linear"
+                label="Send"
+                color="gray" variant="solid"
+                @click="search"
+              />
             </div>
           </div>
         </div>
       </div>
     </div>
+    <div class="h-1/2 bg-white z-10">
+      <iframe src="http://127.0.0.1:3000/test" frameborder="0" class="h-full w-full" height="100%" width="100%" />
+    </div>
   </main>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+#__nuxt, body, html {
+  height: 100%;
+}
+</style>
